@@ -127,6 +127,34 @@ def _make_customer(source_name, target_doc=None, ignore_permissions=False):
 	return doclist
 
 @frappe.whitelist()
+def make_call(source_name, target_doc=None):
+
+	target_doc = get_mapped_doc("Lead", source_name, 
+		{"Lead": {
+			"doctype": "Call",
+			"field_map": {
+				"lead": source_name,
+			}
+		}}, target_doc)
+
+
+	return target_doc
+
+@frappe.whitelist()
+def make_appointment(source_name, target_doc=None):
+
+	target_doc = get_mapped_doc("Lead", source_name, 
+		{"Lead": {
+			"doctype": "Appointment",
+			"field_map": {
+				"lead": source_name,
+			}
+		}}, target_doc)
+
+
+	return target_doc
+
+@frappe.whitelist()
 def make_opportunity(source_name, target_doc=None):
 	target_doc = get_mapped_doc("Lead", source_name, 
 		{"Lead": {

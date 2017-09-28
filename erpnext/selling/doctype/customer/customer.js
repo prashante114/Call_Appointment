@@ -1,6 +1,9 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // License: GNU General Public License v3. See license.txt
 
+
+frappe.provide("erpnext");
+
 frappe.ui.form.on("Customer", {
 	setup: function(frm) {
 		frm.add_fetch('lead_name', 'company_name', 'customer_name');
@@ -36,10 +39,25 @@ frappe.ui.form.on("Customer", {
 
 		frm.toggle_display(['address_html','contact_html'], !frm.doc.__islocal);
 
+	
 		if(!frm.doc.__islocal) {
 			frappe.contacts.render_address_and_contact(frm);
 
 			// custom buttons
+
+			frm.add_custom_button(__('Call'), function() {
+				console.log("_________")
+				tn=frappe.model.make_new_doc_and_get_name('Call')
+				locals['Call'][tn].customer=frm.doc.name;
+				frappe.set_route('Form','Call',tn);
+			});
+
+			frm.add_custom_button(__('Appointment'), function() {
+				tn=frappe.model.make_new_doc_and_get_name('Appointment')
+				locals['Appointment'][tn].customer=frm.doc.name;
+				frappe.set_route('Form','Appointment',tn);
+			});
+
 			frm.add_custom_button(__('Accounting Ledger'), function() {
 				frappe.set_route('query-report', 'General Ledger',
 					{party_type:'Customer', party:frm.doc.name});
@@ -63,4 +81,21 @@ frappe.ui.form.on("Customer", {
 	validate: function(frm) {
 		if(frm.doc.lead_name) frappe.model.clear_doc("Lead", frm.doc.lead_name);
 	},
+	
+
 });
+
+// this.create_call: function() {
+// 		frappe.model.open_mapped_doc({
+// 			method: "erpnext.crm.doctype.lead.lead.make_call",
+// 			frm: cur_frm
+// 		})
+// 		console.log("_________")
+// 	},
+
+// 	create_appointment: function() {
+// 		frappe.model.open_mapped_doc({
+// 			method: "erpnext.crm.doctype.lead.lead.make_appointment",
+// 			frm: cur_frm
+// 		})
+// 	},

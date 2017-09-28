@@ -29,9 +29,12 @@ erpnext.LeadController = frappe.ui.form.Controller.extend({
 		frappe.dynamic_link = {doc: doc, fieldname: 'name', doctype: 'Lead'}
 
 		if(!doc.__islocal && doc.__onload && !doc.__onload.is_customer) {
+			this.frm.add_custom_button(__("Call"), this.create_call, __("Make"));
+			this.frm.add_custom_button(__("Appointment"), this.create_appointment, __("Make"));
 			this.frm.add_custom_button(__("Customer"), this.create_customer, __("Make"));
 			this.frm.add_custom_button(__("Opportunity"), this.create_opportunity, __("Make"));
 			this.frm.add_custom_button(__("Quotation"), this.make_quotation, __("Make"));
+
 			cur_frm.page.set_inner_btn_group_as_primary(__("Make"));
 		}
 
@@ -40,6 +43,20 @@ erpnext.LeadController = frappe.ui.form.Controller.extend({
 		} else {
 			frappe.contacts.clear_address_and_contact(cur_frm);
 		}
+	},
+
+	create_call: function() {
+		frappe.model.open_mapped_doc({
+			method: "erpnext.crm.doctype.lead.lead.make_call",
+			frm: cur_frm
+		})
+	},
+
+	create_appointment: function() {
+		frappe.model.open_mapped_doc({
+			method: "erpnext.crm.doctype.lead.lead.make_appointment",
+			frm: cur_frm
+		})
 	},
 
 	create_customer: function() {
